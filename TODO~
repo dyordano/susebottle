@@ -1,0 +1,4 @@
+- sites-available and sites-enabled for nginx, make sure they are included in
+  the nginx.conf, symlink
+
+- grant access rights to nginx, search for nginx see what the absolute path is 
