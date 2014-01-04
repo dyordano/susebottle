@@ -1,7 +1,7 @@
 #!/usr/bin/env python 
 
 #Done by: Victor
-#latest update github.com/codeflavour/shells/deploy.py
+#latest update github.com/codeflavour/susebottle/deploy.py
 
 
 '''
@@ -20,7 +20,8 @@ _version = 0.1
 
 PKGMAN = 'zypper'
 SUPERU = 'sudo'
-DEBUG = True  #using this for debuging purpose
+#DEBUG = True  #using this for debuging purpose
+DEBUG = False
 INSTALL = 'in' 
 PIP = 'pip'
 
@@ -33,6 +34,7 @@ if not DEBUG:
    redout = open('/dev/null','w')
 else:
    redout = sys.stdout
+   SUPERU = ''
 
 #start updating with zypper 
 
@@ -40,9 +42,10 @@ def zypinstall():
    for module in zypTpl:
         print 'Using zypper to install', str(module)
         try:
-           subprocess.check_call([SUPERU, PKGMAN,INSTALL ,module],stdout=redout)
-        except CalledProcessError:
-           print "There was an error installing",module
+           returncode = subprocess.check_call([SUPERU, PKGMAN,INSTALL ,module],stdout=redout)
+           print "[...Done]", returncode
+        except OSError:
+           print "There was an error installing",module, sys.stderr
 
 def main():
     if os.getuid() != 0:
