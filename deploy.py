@@ -14,7 +14,7 @@
 import os
 import sys
 import subprocess as s
-
+import re
 _version = 0.1
 
 
@@ -24,6 +24,7 @@ DEBUG = True  #using this for debuging purpose
 #DEBUG = False
 INSTALL = 'in' 
 PIP = 'pip'
+AUTO = '-n'
 zypTpl = ('python-pip','uwsgi','uwsgi-python','nginx') #list of programs zypper will install
 pipTpl = ('bottle','uwsgi') # list of python modules pip will install
 
@@ -38,23 +39,31 @@ else:
 
 def check_install(returncode):
    #check regex, see what i have to find out
-   print returncode
+#   ''.join(returncode)
+   returncode = str(''.join(returncode))
+   if re.search('is already installed',returncode,re.I):
+       print '[>>>Already installed]'
+       return
+   if re.search('NEW package',returncode,re.I):
+       print '[>>>Installed]'
+   if re.search('is locked by',returncode,re.I):
+       exit("You need to close your zypper module first")
+   
 #start updating with zypper 
 def zyp_install():
    for module in zypTpl:
-        print 'Using zypper to install', str(module)
+        print 'Using zypper to install', module
         try:
-           returncode = s.Popen([SUPERU, PKGMAN,INSTALL ,module],stderr=s.PIPE,stdout=s.PIPE).communicate()
-           check_install(returncode)
+           check_install(s.Popen([SUPERU, PKGMAN ,AUTO ,INSTALL ,module],stderr=s.PIPE,stdout=s.PIPE).communicate())
         except OSError:
-           print "There was an error installing",module, sys.stderr
+           print "There was an error installing",module,": --", sys.stderr
    rederr.close()
 
 def main():
     if not DEBUG and os.getuid() != 0:
         exit("You don't have the necessary access privileges, try running this with sudo")
     else:
-         zypinstall()
+         zyp_install()
     
 
 if __name__=='__main__':
