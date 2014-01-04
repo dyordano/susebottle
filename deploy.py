@@ -47,7 +47,7 @@ def check_install(returncode):
    if re.search('NEW package',returncode,re.I):
        print '[>>>Installed]'
    if re.search('is locked by',returncode,re.I):
-       exit("You need to close your zypper module first")
+       exit("Can't spawn new zypper process, app is locked")
    
 #start updating with zypper 
 def zyp_install():
