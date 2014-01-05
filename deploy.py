@@ -21,19 +21,17 @@ _version = 0.1
 PKGMAN = 'zypper'
 SUPERU = 'sudo'
 DEBUG = True  #using this for debuging purpose
-#DEBUG = False
 INSTALL = 'install' 
 PIP = 'pip'
-AUTO = '-n'
+AUTOZYP = '-n'
+AUTOPIP = '-y'
 PIPUP = '--upgrade'
 zypTpl = ('python-pip','uwsgi','uwsgi-python','nginx') #list of programs zypper will install
 pipTpl = ('bottle','uwsgi') # list of python modules pip will install
 
 
 #open devnull and redirect all output there
-if not DEBUG:
-   redout = open('/dev/null','w')
-else:
+if DEBUG:
    redout = sys.stdout
    SUPERU = 'sudo'
    rederr = open('error.log','w')
@@ -53,21 +51,27 @@ def zyp_install():
    for zyppkg in zypTpl:
        print 'Using zypper to install', zyppkg
        try:
-          check_zyp(s.Popen([SUPERU, PKGMAN ,AUTO ,INSTALL ,zyppkg],stderr=s.PIPE,stdout=s.PIPE).communicate())
+          check_zyp(s.Popen([SUPERU, PKGMAN ,AUTOZYP ,INSTALL ,zyppkg],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError:
           print "There was an error installing",zyppkg,": --", sys.stderr
    rederr.close()
 
 def check_pip(pipop):
    pipop = str(''.join(pipop))
-   print pipop
-
+   if re.search('already satisfied',pipop,re.I)
+      print '[>>> Already installed]'
+      return
+   if re.search('Successfully installed',pipop,re.I)
+      print '[>>>Installed successfully]'
+      return
+   if re.search('Downloading',pipop,re.I)
+      print 'got here as well'
 #install python modules with pip
 def pip_install():
     for pipmod in pipTpl:
        print 'Using pip to install', pipmod
        try:
-          check_pip(s.Popen([PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
+          check_pip(s.Popen([SUPERU,PIP, AUTOPIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError:
           print "There was an error installing python-module", pipmod
 
