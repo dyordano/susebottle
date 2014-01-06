@@ -24,9 +24,10 @@ DEBUG = True  #using this for debuging purpose
 INSTALL = 'install' 
 PIP = 'pip'
 AUTOZYP = '-n'
-QUIETPIP = '-q'
+AUTOPIP = 'YES'
+BAR = '|'
 PIPUP = '--upgrade'
-zypTpl = ('python-pip','uwsgi','uwsgi-python','nginx') #list of programs zypper will install
+zypTpl = ('python-pip','uwsgi-python','nginx') #list of programs zypper will install
 pipTpl = ('bottle','uwsgi') # list of python modules pip will install
 
 
@@ -55,12 +56,12 @@ def zyp_install():
    
 
 def check_pip(pipop):
-   print pipop
    pipop = str(''.join(pipop))
    if re.search('already satisfied',pipop,re.I):
       print '[>>> Already installed]'
    if re.search('Successfully installed',pipop,re.I):
-      print '[>>>Installed successfully]'
+      print '[>>>Installed]'
+      return
    if re.search('Downloading',pipop,re.I):
       print 'got here as well'
 
@@ -69,7 +70,8 @@ def pip_install():
     for pipmod in pipTpl:
        print 'Using pip to install', pipmod
        try:
-          check_pip(s.Popen([SUPERU,PIP, INSTALL,pipmod,QUIETPIP],stderr=s.PIPE,stdout=s.PIPE).communicate())
+          yescmd= s.Popen('yes',stdout=s.PIPE)
+          check_pip(s.Popen([SUPERU,PIP, INSTALL,pipmod],stdin=yescmd.stdout,stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError:
           print "There was an error installing python-module", pipmod
 
