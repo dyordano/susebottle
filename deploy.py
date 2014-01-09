@@ -34,7 +34,6 @@ if DEBUG:
    SUPERU = 'sudo'
    
 def check_zyp(returncode):
-   
    for line in returncode:
        if re.search('is already installed',line,re.I):
             print 'Item Found, not installing'
