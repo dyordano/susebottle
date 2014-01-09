@@ -17,10 +17,9 @@ import subprocess as s
 import re
 _version = 0.1
 
-
 PKGMAN = 'zypper'
 SUPERU = 'sudo'
-DEBUG = True  #using this for debuging purpose
+DEBUG = True 
 INSTALL = 'install' 
 PIP = 'pip'
 AUTOZYP = '-n'
@@ -31,19 +30,21 @@ zypTpl = ('python-pip','uwsgi-python','nginx') #list of programs zypper will ins
 pipTpl = ('bottle','uwsgi') # list of python modules pip will install
 
 
-#open devnull and redirect all output there
 if DEBUG:
    SUPERU = 'sudo'
    
 def check_zyp(returncode):
-   returncode = str(''.join(returncode))
-   if re.search('is already installed',returncode,re.I):
-       print '[>>>Already installed]'
-       return
-   if re.search('NEW package',returncode,re.I):
-       print '[>>>Installed]'
-   if re.search('is locked by',returncode,re.I):
-       exit("Can't spawn new zypper process, app is locked")
+   
+   for line in returncode:
+       if re.search('is already installed',line,re.I):
+            print 'Item Found, not installing'
+       if re.search('is already installed',line,re.I):
+            print '[>>>Already installed]'
+            return
+       if re.search('NEW package',line,re.I):
+            print '[>>>Installed]'
+       if re.search('is locked by',line,re.I):
+            exit("Can't spawn new zypper process, app is locked")
    
 #start updating with zypper 
 def zyp_install():
@@ -51,19 +52,19 @@ def zyp_install():
        print 'Using zypper to install', zyppkg
        try:
           check_zyp(s.Popen([SUPERU, PKGMAN ,AUTOZYP ,INSTALL ,zyppkg],stderr=s.PIPE,stdout=s.PIPE).communicate())
-       except OSError:
-          print "There was an error installing",zyppkg,": --", sys.stderr
+       except OSError as e:
+          print "There was an error installing",zyppkg,": --", e
    
 
 def check_pip(pipop):
-   pipop = str(''.join(pipop))
-   if re.search('already satisfied',pipop,re.I):
-      print '[>>> Already installed]'
-   if re.search('Successfully installed',pipop,re.I):
-      print '[>>>Installed]'
-      return
-   if re.search('Downloading',pipop,re.I):
-      print 'got here as well'
+   for module in pipop:
+       if re.search('already satisfied',module,re.I):
+          print '[>>> Already installed]'
+       if re.search('Successfully installed',module,re.I):
+          print '[>>>Installed]'
+          return
+       if re.search('Downloading',module,re.I):
+          print 'got here as well'
 
 #install python modules with pip
 def pip_install():
@@ -72,8 +73,8 @@ def pip_install():
        try:
           yescmd= s.Popen('yes',stdout=s.PIPE)
           check_pip(s.Popen([SUPERU,PIP, INSTALL,pipmod],stdin=yescmd.stdout,stderr=s.PIPE,stdout=s.PIPE).communicate())
-       except OSError:
-          print "There was an error installing python-module", pipmod
+       except OSError as e: 
+          print "There was an error installing python-module", pipmod, e
 
 def main():
     if not DEBUG and os.getuid() != 0:
