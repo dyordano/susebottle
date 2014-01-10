@@ -37,10 +37,12 @@ def check_install(returncode):
             print '[>>>Already installed]'
        if re.search('NEW package',line,re.I):
             print '[>>>Installed]'
-       if re.search('already satisfied',line,re.I)
+       if re.search('already satisfied',line,re.I):
             print '[>>>Already installed]'
-       if re.search('successfully installed',line,re.I)
+       if re.search('successfully installed',line,re.I):
             print '[>>>Installed]'
+       if re.search('Connection failed',line,re.I):
+            exit('Can\'t establish an internet connection')
        if re.search('is locked by',line,re.I):
             exit("Can't spawn new zypper process, app is locked")
    
