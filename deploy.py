@@ -23,8 +23,6 @@ DEBUG = True
 INSTALL = 'install' 
 PIP = 'pip'
 AUTOZYP = '-n'
-AUTOPIP = 'YES'
-BAR = '|'
 PIPUP = '--upgrade'
 zypTpl = ('python-pip','uwsgi-python','nginx') #list of programs zypper will install
 pipTpl = ('bottle','uwsgi') # list of python modules pip will install
@@ -70,8 +68,7 @@ def pip_install():
     for pipmod in pipTpl:
        print 'Using pip to install', pipmod
        try:
-          yescmd= s.Popen('yes',stdout=s.PIPE)
-          check_pip(s.Popen([SUPERU,PIP, INSTALL,pipmod],stdin=yescmd.stdout,stderr=s.PIPE,stdout=s.PIPE).communicate())
+         check_pip(s.Popen([SUPERU,PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError as e: 
           print "There was an error installing python-module", pipmod, e
 
