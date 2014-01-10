@@ -31,14 +31,15 @@ pipTpl = ('bottle','uwsgi') # list of python modules pip will install
 if DEBUG:
    SUPERU = 'sudo'
    
-def check_zyp(returncode):
+def check_install(returncode):
    for line in returncode:
        if re.search('is already installed',line,re.I):
-            print 'Item Found, not installing'
-       if re.search('is already installed',line,re.I):
             print '[>>>Already installed]'
-            return
        if re.search('NEW package',line,re.I):
+            print '[>>>Installed]'
+       if re.search('already satisfied',line,re.I)
+            print '[>>>Already installed]'
+       if re.search('successfully installed',line,re.I)
             print '[>>>Installed]'
        if re.search('is locked by',line,re.I):
             exit("Can't spawn new zypper process, app is locked")
@@ -48,27 +49,16 @@ def zyp_install():
    for zyppkg in zypTpl:
        print 'Using zypper to install', zyppkg
        try:
-          check_zyp(s.Popen([SUPERU, PKGMAN ,AUTOZYP ,INSTALL ,zyppkg],stderr=s.PIPE,stdout=s.PIPE).communicate())
+          check_install(s.Popen([SUPERU, PKGMAN ,AUTOZYP ,INSTALL ,zyppkg],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError as e:
           print "There was an error installing",zyppkg,": --", e
    
-
-def check_pip(pipop):
-   for module in pipop:
-       if re.search('already satisfied',module,re.I):
-          print '[>>> Already installed]'
-       if re.search('Successfully installed',module,re.I):
-          print '[>>>Installed]'
-          return
-       if re.search('Downloading',module,re.I):
-          print 'got here as well'
-
 #install python modules with pip
 def pip_install():
     for pipmod in pipTpl:
        print 'Using pip to install', pipmod
        try:
-         check_pip(s.Popen([SUPERU,PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
+         check_install(s.Popen([SUPERU,PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError as e: 
           print "There was an error installing python-module", pipmod, e
 
