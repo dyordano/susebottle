@@ -19,32 +19,31 @@ _version = 0.1
 
 PKGMAN = 'zypper'
 SUPERU = 'sudo'
-DEBUG = True 
+DEBUG = False  
 INSTALL = 'install' 
 PIP = 'pip'
 AUTOZYP = '-n'
 PIPUP = '--upgrade'
-zypTpl = ('python-pip','uwsgi-python','nginx') #list of programs zypper will install
-pipTpl = ('bottle','uwsgi') # list of python modules pip will install
+zypTpl = ('python-pip','uWsgi','uwsgi-python','nginx') #list of programs zypper will install
+pipTpl = ('bottle','') # list of python modules pip will install
 
 
 if DEBUG:
    SUPERU = 'sudo'
    
 def check_install(returncode):
+   psat = re.compile(r'(already installed|already statisfied)')
+   pinst = re.compile(r'(new package|Successfully installed)')
+#   patfail = re.compile(r'(\\)|(\\)')
    for line in returncode:
-       if re.search('is already installed',line,re.I):
-            print '[>>>Already installed]'
-       if re.search('NEW package',line,re.I):
-            print '[>>>Installed]'
-       if re.search('already satisfied',line,re.I):
-            print '[>>>Already installed]'
-       if re.search('successfully installed',line,re.I):
-            print '[>>>Installed]'
-       if re.search('Connection failed',line,re.I):
-            exit('Can\'t establish an internet connection')
+       if re.search(psat,line):
+            print '[Skipping]'
+       if re.search(pinst,line):
+            print '[Done]'
+       if re.search('connection failed',line,re.I):
+            exit('>>> No internet connection')
        if re.search('is locked by',line,re.I):
-            exit("Can't spawn new zypper process, app is locked")
+            exit(">>> Can't spawn zypper, process busy")
    
 #start updating with zypper 
 def zyp_install():
