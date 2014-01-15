@@ -18,22 +18,22 @@ _version = 0.1
 
 PKGMAN = 'zypper'
 SUPERU = 'sudo'
-DEBUG = False  
+#DEBUG = True
+DEBUG = False
 INSTALL = 'install' 
 PIP = 'pip'
 AUTOZYP = '-n'
-PIPUP = '--upgrade'
+#PIPUP = '--upgrade'
 zypTpl = ('python-pip','uWsgi','uwsgi-python','nginx') #list of programs zypper will install
-pipTpl = ('bottle','') # list of python modules pip will install
+pipTpl = ('bottle',) # list of python modules pip will install
 
 
-if DEBUG:
-   SUPERU = 'sudo'
+if DEBUG: SUPERU = 'sudo'
    
 def check_install(returncode):
-   psat = re.compile(r'(already installed|already statisfied)')
-   pinst = re.compile(r'(new package|Successfully installed)')
-#   patfail = re.compile(r'(\\)|(\\)')
+   psat = re.compile(r'already installed|satisfied')
+   pinst = re.compile(r'new package|uccessfully installed')
+   if DEBUG:  print ('\n').join(returncode)    #patfail = re.compile(r'(\\)|(\\)')
    for line in returncode:
        if re.search(psat,line):
             print '[Skipping]'
@@ -51,7 +51,7 @@ def zyp_install():
        try:
           check_install(s.Popen([SUPERU, PKGMAN ,AUTOZYP ,INSTALL ,zyppkg],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError as e:
-          print "There was an error installing",zyppkg,": --", e
+          print "Error installing",zyppkg,": --", e
    
 #install python modules with pip
 def pip_install():
@@ -60,7 +60,7 @@ def pip_install():
        try:
          check_install(s.Popen([SUPERU, PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError as e: 
-          print "There was an error installing python-module", pipmod, e
+          print "Error installing python-module", pipmod, e
 
 def main():
     if not DEBUG and os.getuid() != 0:
