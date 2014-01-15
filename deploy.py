@@ -29,7 +29,7 @@ AUTOZYP = '-n'
 #PIPUP = '--upgrade'
 zypTpl = ('python-pip','uWsgi','uwsgi-python','nginx') #list of programs zypper will install
 pipTpl = ('bottle',) # list of python modules pip will install
-dirsTpl = ('/etc/nginx','/etc/uwsgi','/run/sockets')
+dirsTpl = ('/etc/nginx/sites-enabled','/etc/nginx/sites-available','/etc/uwsgi','/run/sockets')
 
 if DEBUG: SUPERU = 'sudo'
 
