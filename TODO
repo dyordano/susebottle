@@ -2,3 +2,13 @@
   the nginx.conf, symlink
 
 - grant access rights to nginx user/group
+
+
+
+
+
+First results
+-------
+
+tested this on a new suse install and it installed everything except uwsgi in
+PIP, need to check

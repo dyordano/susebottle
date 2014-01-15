@@ -3,7 +3,6 @@
 #Done by: Victor
 #latest update github.com/codeflavour/susebottle
 
-
 '''
                                           Deploy Bottle web framework on OpenSuse 13.xx
                                           Uses pip, nginx, uwsgi, uwsgi-python 
@@ -59,7 +58,7 @@ def pip_install():
     for pipmod in pipTpl:
        print 'Using pip to install', pipmod
        try:
-         check_install(s.Popen([SUPERU,PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
+         check_install(s.Popen([SUPERU, PIP, INSTALL,pipmod],stderr=s.PIPE,stdout=s.PIPE).communicate())
        except OSError as e: 
           print "There was an error installing python-module", pipmod, e
 
