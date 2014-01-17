@@ -33,11 +33,6 @@ dirsTpl = ('/etc/nginx/sites-enabled','/etc/nginx/sites-available','/etc/uwsgi',
 
 if DEBUG: SUPERU = 'sudo'
 
-#basically i either generate the both config files from here, or keep a copy in the project
-
-def set_conf():
-    
-
 
 def check_dir():
    for path in dirsTpl:
