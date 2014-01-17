@@ -29,9 +29,17 @@ AUTOZYP = '-n'
 #PIPUP = '--upgrade'
 zypTpl = ('python-pip','uWsgi','uwsgi-python','nginx') #list of programs zypper will install
 pipTpl = ('bottle',) # list of python modules pip will install
-dirsTpl = ('/etc/nginx/sites-enabled','/etc/nginx/sites-available','/etc/uwsgi','/run/sockets')
+dirsTpl = ('/etc/nginx/sites-enabled','/etc/nginx/sites-available','/etc/uwsgi','/run/sockets','/srv/www/bottle')
 
 if DEBUG: SUPERU = 'sudo'
+
+
+#add nginx config
+
+
+def set_conf():
+    
+
 
 def check_dir():
    for path in dirsTpl:
