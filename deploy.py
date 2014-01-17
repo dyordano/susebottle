@@ -33,9 +33,7 @@ dirsTpl = ('/etc/nginx/sites-enabled','/etc/nginx/sites-available','/etc/uwsgi',
 
 if DEBUG: SUPERU = 'sudo'
 
-
-#add nginx config
-
+#basically i either generate the both config files from here, or keep a copy in the project
 
 def set_conf():
     
@@ -49,7 +47,8 @@ def check_dir():
                 os.makedirs(path)
           except OSError as e:
                 exit("Can't create directory %s , Error: %s" % (path, e))
-   
+          else:
+                set_conf() #if it's good, go and add config settings to uWsgi and Nginx                  
 
 def check_install(returncode):
    psat = re.compile(r'already installed|satisfied',re.I)
