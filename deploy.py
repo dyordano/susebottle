@@ -17,6 +17,8 @@ import os
 import sys
 import subprocess as s
 import re
+from lib import doconf as wrc
+
 
 _version = 0.1
 PKGMAN = 'zypper'
@@ -42,8 +44,8 @@ def check_dir():
                 os.makedirs(path)
           except OSError as e:
                 exit("Can't create directory %s , Error: %s" % (path, e))
-          else:
-                set_conf() #if it's good, go and add config settings to uWsgi and Nginx                  
+#          else:
+ #               set_conf() #if it's good, go and add config settings to uWsgi and Nginx                  
 
 def check_install(returncode):
    psat = re.compile(r'already installed|satisfied',re.I)
