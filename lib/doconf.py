@@ -25,5 +25,6 @@ class WriteConfig:
         /etc/nginx/sites-enabled, also must modify nginx.conf with
        ` include /etc/nginx/sites-available`
         need to have the config written somewhere, either as a tuple or something else
+        added git
       '''
        
